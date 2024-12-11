@@ -22,11 +22,18 @@ def process_music_files(folder_path):
         new_file_name = f"{number}_{file}"
         renamed_files.append(new_file_name)
 
-    # Применяем изменения к файлам
-    for old_name, new_name in zip(files, renamed_files):
-        old_path = os.path.join(folder_path, old_name)
+    # Применяем изменения к файлам: временное переименование для исключения конфликтов
+    temp_files = []
+    for old_name in files:
+        temp_name = f"temp_{old_name}"
+        os.rename(os.path.join(folder_path, old_name), os.path.join(folder_path, temp_name))
+        temp_files.append(temp_name)
+
+    # Финальное переименование с учетом нового порядка
+    for temp_name, new_name in zip(temp_files, renamed_files):
+        temp_path = os.path.join(folder_path, temp_name)
         new_path = os.path.join(folder_path, new_name)
-        os.rename(old_path, new_path)
+        os.rename(temp_path, new_path)
 
     print("Треки успешно обработаны и переименованы!")
 
